@@ -1,29 +1,31 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="light">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>منصة رحلة الحكمة والدعوة</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Cairo & Tajawal for elegant Arabic typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
     
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Tajawal', 'sans-serif'],
-                    },
                     colors: {
                         primary: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            900: '#14532d',
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b'
                         },
                         dark: {
                             bg: '#0f172a',
@@ -31,737 +33,1243 @@
                             text: '#f8fafc'
                         }
                     },
-                    boxShadow: {
-                        'glow': '0 0 15px rgba(34, 197, 94, 0.5)',
-                        'glow-red': '0 0 15px rgba(239, 68, 68, 0.5)',
+                    fontFamily: {
+                        sans: ['Cairo', 'Tajawal', 'sans-serif'],
+                        serif: ['Tajawal', 'serif']
                     }
                 }
             }
         }
     </script>
-
     <style>
-        body {
-            font-family: 'Tajawal', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
-            overflow-x: hidden;
+        * {
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         
         /* 3D Flip Card Styles */
-        .perspective-1000 { perspective: 1000px; }
-        .transform-style-3d { transform-style: preserve-3d; }
-        .backface-hidden { backface-visibility: hidden; }
-        .rotate-y-180 { transform: rotateY(180deg); }
-        
-        .flip-card-inner {
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            height: 100%;
+        .perspective-1000 {
+            perspective: 1000px;
         }
-        
-        .flip-card.flipped .flip-card-inner {
+        .flip-card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
             transform: rotateY(180deg);
         }
 
         /* Animations */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-10px); }
-            40%, 80% { transform: translateX(10px); }
-        }
-        .animate-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-        
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
-
-        /* Progress Bar Transition */
-        #progress-fill { transition: width 0.5s ease-in-out; }
-
-        /* Print Styles for Certificate */
-        @media print {
-            body * { visibility: hidden; }
-            #certificate-container, #certificate-container * { visibility: visible; }
-            #certificate-container {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-            #print-btn, #app-header { display: none !important; }
+        .animate-fade-in {
+            animation: fadeIn 0.35s ease-out forwards;
         }
 
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Confetti canvas */
         #confetti-canvas {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
             z-index: 9999;
         }
+
+        /* Chat simulation */
+        .chat-bubble-anim {
+            animation: chatSlide 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes chatSlide {
+            from { opacity: 0; transform: translateY(12px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Deconstruction Puzzle styles */
+        .puzzle-segment {
+            display: inline;
+            padding: 3px 6px;
+            margin: 2px;
+            border-radius: 6px;
+            border-bottom: 2px dashed #94a3b8;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .puzzle-segment:hover {
+            background-color: rgba(59, 130, 246, 0.15);
+            border-bottom-color: #3b82f6;
+        }
+        .puzzle-segment.active-correct {
+            background-color: #dcfce7 !important;
+            color: #166534 !important;
+            border-bottom: 2px solid #22c55e !important;
+            font-weight: 800;
+        }
+        .puzzle-segment.active-wrong {
+            background-color: #fee2e2 !important;
+            color: #991b1b !important;
+            border-bottom: 2px solid #ef4444 !important;
+            animation: shake 0.3s;
+        }
+
+        /* Cooldown Timer progress */
+        .cooldown-fill-bar {
+            transition: width 1s linear;
+        }
+
+        /* Printing optimizations */
+        @media print {
+            body { background: white !important; color: black !important; }
+            #app-header, #stumble-btn, #print-controls-bar, button { display: none !important; }
+            #certificate-container { border: 8px double #047857 !important; box-shadow: none !important; }
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 dark:bg-dark-bg dark:text-dark-text min-h-screen flex flex-col base-font-size">
+<body class="bg-slate-50 text-slate-800 dark:bg-dark-bg dark:text-dark-text min-h-screen flex flex-col selection:bg-primary-500 selection:text-white transition-colors duration-200">
 
     <canvas id="confetti-canvas"></canvas>
 
-    <header id="app-header" class="fixed top-0 left-0 w-full z-50 bg-white/90 dark:bg-dark-card/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
-        <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
-            <div class="flex items-center gap-2">
+    <!-- Top Sticky Navigation & Action Bar -->
+    <header id="app-header" class="fixed top-0 left-0 w-full z-50 bg-white/95 dark:bg-dark-card/95 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-700 transition-colors duration-200">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+            <!-- Brand / Logo -->
+            <div class="flex items-center gap-2 cursor-pointer" onclick="renderWelcome()">
                 <span class="text-2xl">🧭</span>
-                <h1 class="font-bold text-lg md:text-xl text-primary-600 dark:text-primary-500 hidden sm:block">رحلة الحكمة</h1>
+                <h1 class="font-black text-base md:text-lg text-primary-600 dark:text-primary-500 tracking-wide">
+                    رحلة الحكمة
+                </h1>
             </div>
             
-            <div class="flex items-center gap-3 bg-gray-100 dark:bg-slate-800 rounded-full px-4 py-1.5 shadow-inner">
-                <button onclick="changeFontSize(-1)" class="p-1 hover:text-primary-600 font-bold transition" title="تصغير الخط">A-</button>
-                <div class="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
-                <button onclick="changeFontSize(1)" class="p-1 hover:text-primary-600 font-bold text-lg transition" title="تكبير الخط">A+</button>
-                <div class="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
-                <button onclick="toggleTheme()" id="theme-toggle" class="p-1 hover:text-primary-600 transition text-lg" title="الوضع الليلي/النهاري">🌙</button>
+            <!-- Controls (Stumbles, Font, Theme) -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Stumble & Review Button (Hidden when 0) -->
+                <button id="stumble-btn" onclick="openReviewMode()" class="hidden items-center gap-1.5 px-3 py-1.5 bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 rounded-full border border-rose-200 dark:border-rose-800 text-xs sm:text-sm font-bold shadow-sm hover:bg-rose-100 transition-all">
+                    <span>⚠️ التعثرات</span>
+                    <span id="stumble-count" class="bg-rose-600 text-white px-2 py-0.5 rounded-full text-xs font-black">0</span>
+                </button>
+
+                <!-- Font Resizer -->
+                <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-2 py-1 border border-slate-200 dark:border-slate-700">
+                    <button onclick="changeFontSize(-1)" class="px-2 py-0.5 hover:text-primary-600 dark:hover:text-primary-400 font-bold text-xs" title="تصغير الخط">A-</button>
+                    <span class="text-slate-300 dark:text-slate-600">|</span>
+                    <button onclick="changeFontSize(1)" class="px-2 py-0.5 hover:text-primary-600 dark:hover:text-primary-400 font-bold text-sm" title="تكبير الخط">A+</button>
+                </div>
+
+                <!-- Dark / Light Theme Toggle -->
+                <button onclick="toggleTheme()" id="theme-toggle-btn" class="p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition text-base" title="الوضع الليلي / النهاري">
+                    🌙
+                </button>
             </div>
         </div>
         
         <!-- Live Progress Bar -->
-        <div class="w-full bg-gray-200 dark:bg-slate-700 h-1.5 relative">
-            <div id="progress-fill" class="bg-primary-500 h-1.5 rounded-r-full w-0"></div>
-            <span id="progress-text" class="absolute left-2 top-2 text-xs font-bold text-primary-600 dark:text-primary-400">0%</span>
+        <div class="w-full bg-slate-200 dark:bg-slate-700 h-1 relative">
+            <div id="progress-bar-fill" class="bg-gradient-to-r from-primary-500 to-emerald-400 h-1 w-0 transition-all duration-500"></div>
         </div>
     </header>
 
-    <main id="app-content" class="flex-grow container mx-auto px-4 pt-24 pb-12 flex flex-col items-center justify-center">
-        <!-- Screens will be injected here via JS -->
+    <!-- Main Container where screens are rendered dynamically -->
+    <main id="app-content" class="flex-grow max-w-5xl w-full mx-auto px-4 pt-24 pb-12 flex flex-col justify-center items-center">
+        <!-- Dynamically injected via JavaScript -->
     </main>
 
+    <!-- Footer Note -->
+    <footer class="text-center py-4 text-xs font-semibold text-slate-400 dark:text-slate-500 border-t border-slate-200 dark:border-slate-800">
+        منصة رحلة الحكمة والدعوة • مهارات الحوار بالتي هي أحسن
+    </footer>
     <script>
-        // Data Structure for the entire learning journey
+        /* ==========================================================================
+           1. APPLICATION DATA: 4 STAGES, 19 RULES & GAMIFIED CHALLENGES
+           ========================================================================== */
         const appData = [
             {
+                id: 1,
                 title: "المرحلة الأولى: النية والتهيئة",
                 icon: "🌱",
-                color: "from-emerald-400 to-green-600",
+                gradient: "from-emerald-500 to-teal-700",
                 rules: [
-                    { id: 1, icon: "❤️", title: "يجب إخلاص النية وتصحيحها", desc: "اجعل غايتك هداية قومك ومحبة الخير لهم، لا الانتصار لنفسك أو إثبات ذاتك في النقاش." },
-                    { id: 2, icon: "📚", title: "حاجة المؤمنين لمعرفة الاعتقاد الحق تسبق حاجتهم للدفاع عنه", desc: "تعلم عقيدتك وتفقه فيها جيداً أولاً، ففاقد الشيء لا يعطيه ولا يستطيع هداية غيره." },
-                    { id: 3, icon: "🕊️", title: "المقصود أصالة من الرد: بيان الحق", desc: "احرص على إيصال النور لعقل محاورك بلطف، ولا تحرص على إحراجه أو إظهاره بمظهر الجاهل أمام أهله." },
-                    { id: 4, icon: "⚖️", title: "لا يشرع الرد إلا إذا غلبت المصالح", desc: "إذا كان النقاش سيؤدي إلى قطيعة رحم أو غضب الوالدين أو فتنة أكبر، فالصمت والحلم أولى وأحكم." },
-                    { id: 5, icon: "⏳", title: "من نشأ على معتقد يصعب أن يفارقه", desc: "التمس العذر لقومك وصعوبة التغيير عليهم، وتذكر رحلتك أنت وكيف تطلبت وقتاً وصبراً." }
+                    { id: 1, icon: "❤️", title: "إخلاص النية وتصحيحها والاحتساب", desc: "اجعل غايتك هداية قومك ومحبة الخير لهم، لا الانتصار لنفسك أو إثبات ذاتك والتفاخر في المجالس." },
+                    { id: 2, icon: "📚", title: "معرفة الاعتقاد الحق تسبق الدفاع عنه", desc: "تعلم عقيدتك وتفقه فيها جيداً بالأدلة أولاً، ففاقد الشيء لا يعطيه ولا يستطيع هداية غيره." },
+                    { id: 3, icon: "🕊️", title: "المقصود أصالة: بيان الحق لا إفحام المخالف", desc: "احرص على إيصال النور لقلب وعقل محاورك بلطف، ولا تكن حريصاً على إحراجه أو كسره أمام أهله." },
+                    { id: 4, icon: "⚖️", title: "لا يشرع الرد إلا إذا غلبت المصالح", desc: "إذا كان النقاش سيؤدي إلى قطيعة رحم أو مفسدة أكبر أو فتنة، فالصمت والتأجيل أحكم وأولى شرعاً." },
+                    { id: 5, icon: "⏳", title: "من نشأ على معتقد يصعب مفارقته", desc: "التمس العذر لمن نشأ على التقليد وصعوبة التغيير، وتذكر رحلتك أنت وكيف احتاجت صبراً ووقتاً." }
                 ],
                 challenges: [
                     {
-                        type: "quiz",
-                        title: "تحدي الموقف المباشر",
-                        question: "كنت في مجلس عائلي وطرح أحد أقاربك رأياً خطأً واستفزك أمام الجميع، ما هو التصرف الحكيم؟",
+                        type: "cooldown",
+                        title: "تحدي كبح الغضب وسرعة البديهة",
+                        badge: "⏱️ ضبط النفس",
+                        scenario: "أثناء جلسة عائلية، طرح أحد أقاربك رأياً خطأً، ثم وجه إليك عبارة مستفزة أمام الجميع ليظهر عجزك. ماذا تفعل؟",
+                        cooldownSeconds: 4,
                         options: [
-                            { text: "أرد عليه بقوة أمام الجميع لأثبت خطأه وأسكت استفزازه.", correct: false },
-                            { text: "أتجاهل الاستفزاز، وأبين الحق بهدوء أو أؤجل النقاش لجلسة فردية.", correct: true },
-                            { text: "أغضب وأغادر المجلس تعبيراً عن رفضي للباطل.", correct: false }
-                        ],
-                        explanation: "الحكمة تقتضي عدم الانتصار للنفس (القاعدة 1) وتقديم المصلحة على المفسدة (القاعدة 4)."
+                            { text: "أرد عليه فوراً وبنفس الحدة أمام الجميع لأثبت خطأه وأسكت تهجمه.", correct: false, exp: "الرد الغاضب والانتصار للنفس أمام الملأ يغلق القلوب ويفسد الود ومخالف للقاعدة (1 و 4)." },
+                            { text: "أكظم غيظي، وأجيب بهدوء بالغ دون تجريح، أو أؤجل النقاش إلى جلسة خاصة.", correct: true, exp: "تصرف حكيم! الانتصار لله لا للنفس، وتقديم المصلحة وحفظ ماء الوجه أدعى لقبول الحق." }
+                        ]
                     },
                     {
-                        type: "mistake",
-                        title: "اكتشف الخطأ المنهجي",
-                        scenario: "داعية يناقش قريبه في مجلس، فبدأ الداعية بتفنيد أدلة قريبه بقوة حتى تلعثم القريب وسكت خجلاً أمام ولده، فابتسم الداعية معتبراً أنه انتصر للحق.",
-                        question: "ما هو الخطأ المنهجي في هذا الموقف؟",
+                        type: "chat",
+                        title: "محاكاة الدردشة: استيعاب المخالف",
+                        badge: "💬 حوار واتساب",
+                        scenario: "أرسل لك قريبك الأكبر سناً رسالة نصية منفعلة بعد أن علم بتغير بعض آرائك...",
+                        incomingMessage: "أنت تظن أنك تفهم أكثر من آبائنا وأجدادنا الذين عاشوا عمرهم على هذا؟! من علمك هذا التعالي؟",
                         options: [
-                            { text: "الخطأ هو الحرص على الإفحام والإحراج بدلاً من هدايته بلطف.", correct: true },
-                            { text: "الخطأ أنه ابتسم، وكان يجب أن يبقى جاداً.", correct: false },
-                            { text: "لا يوجد خطأ، إفحام المخالف واجب.", correct: false }
-                        ],
-                        explanation: "المقصود أصالة هو بيان الحق لهدايته، أما إفحامه وإحراجه (خاصة أمام ولده) فهو يغلق قلبه عن قبول الحق (القاعدة 3)."
-                    },
-                    {
-                        type: "conversation",
-                        title: "محاكاة الحوار",
-                        intro: "قريبك يقول لك: 'أنت تعتقد أنك تفهم أكثر من آبائنا وأجدادنا؟'",
-                        steps: [
-                            {
-                                text: "كيف ترد عليه؟",
-                                choices: [
-                                    { text: "لا، لكني أتبع الدليل، وهم لم يكونوا يعلمون كل شيء.", nextId: "bad", isCorrect: false },
-                                    { text: "أنا أحترمهم وأحبهم، لكني أبحث عن رضا الله بالدليل كما كانوا يبحثون عنه.", nextId: "good", isCorrect: true }
-                                ]
-                            },
-                            { id: "bad", text: "القريب (بغضب): 'أنت تتطاول على أهلك!' (لقد خسرت النقاش بسبب الاستفزاز).", isEnd: true, success: false, feedback: "الرد كان جافاً ولم يراعِ صعوبة مفارقة المعتقد وتقدير الآباء (القاعدة 5)." },
-                            { id: "good", text: "القريب (يهدأ قليلاً): 'صحيح، رضا الله غاية الجميع.. لكن الأمر صعب'.", isEnd: true, success: true, feedback: "ممتاز! أظهرت له الرحمة وصححت نيتك في توجيه الحوار نحو الله (القاعدة 1 و 5)." }
+                            { text: "لا، لكن آباءنا لم يكونوا معصومين وأنا أتبع الدليل الصريح فقط!", correct: false, meter: -35, botReply: "قريبك: (غاضباً) يعني تتهم أهلك بالجهل والضلال؟! لا أريد النقاش معك مجدداً!", exp: "الرد جاف وصادم للمشاعر ولم يراعِ صعوبة مفارقة معتقد الآباء (القاعدة 5)." },
+                            { text: "معاذ الله يا عمي، أهلي فوق رأسي، لكن حبنا لهم يدعونا للبحث معاً عما يرضي الله كما كانوا يحبون.", correct: true, meter: +40, botReply: "قريبك: (يهدأ قليلاً) رضا الله غايتنا جميعاً.. لكن التغيير ليس سهلاً علينا يا بني.", exp: "أحسنت! قدمت الرحمة والتواضع، واحتسبت الأجر في إيصال الحق بلطف دون إحراج." }
                         ]
                     }
                 ]
             },
             {
-                title: "المرحلة الثانية: فهم المخالف",
+                id: 2,
+                title: "المرحلة الثانية: فهم المخالف وعوائق القبول",
                 icon: "🤝",
-                color: "from-blue-400 to-indigo-600",
+                gradient: "from-blue-600 to-indigo-700",
                 rules: [
-                    { id: 6, icon: "🤔", title: "ليس كل من خالف الحق معانداً", desc: "احسن الظن بقومك، فكثير منهم يمارس أخطاءه بدافع التعظيم والجهل لا بدافع كره الحق." },
-                    { id: 7, icon: "👤", title: "قلما رجع أحد عن مذهبه في مناظرة علنية", desc: "تجنب النقاشات العلنية الحادة أمام الناس؛ فالنصح في السر أدعى للقبول وأحفظ لماء الوجه." },
-                    { id: 8, icon: "⛓️", title: "الناس قد ترد الحق خوفاً أو تقليداً", desc: "افهم المانع النفسي لدى محاورك؛ فقد يمنعه الخوف من الخسارة الاجتماعية وليس عدم اقتناعه." },
-                    { id: 9, icon: "📊", title: "الكثرة والقلة ليستا معياراً", desc: "لا تغتر بكثرة المخالفين، فالحق يُعرف بالدليل والقرآن لا بعدد الأتباع." },
-                    { id: 10, icon: "🛡️", title: "قد يصف المبطلون أهل الحق بألقاب منفرة", desc: "لا تحزن إذا تم إطلاق ألقاب منفرة عليك، فهذه حيلة قديمة لصد الناس عن الاستماع." }
+                    { id: 6, icon: "🤔", title: "ليس كل مخالف معانداً؛ بل قد يكون جاهلاً", desc: "أحسن الظن بقومك، فكثير منهم يمارس الأخطاء عن جهل أو نية صالحة متأولاً، لا عن بغض للحق." },
+                    { id: 7, icon: "👤", title: "قلما رجع أحد عن مذهبه في مناظرة علنية", desc: "تجنب الإحراج العلني؛ فالنصح في السر والحوار الفردي أحفظ لماء الوجه وأدعى للانقياد." },
+                    { id: 8, icon: "⛓️", title: "الناس قد ترد الحق خوفاً أو تقليداً", desc: "افهم الموانع النفسية؛ فالخوف من مقاطعة الأهل أو النبذ الاجتماعي قد يمنعه رغم وضوح الدليل لديه." },
+                    { id: 9, icon: "📊", title: "الكثرة والقلة ليستا معياراً للحق", desc: "لا تغتر بكثرة السالكين؛ فالحق يُعرف بالقرآن والبرهان لا بعدد الأتباع ولا بشهرة القائلين." },
+                    { id: 10, icon: "🛡️", title: "قد يصف المبطلون أهل الحق بألقاب منفرة", desc: "لا تجزع إن نبذوك بلقب منفر؛ فهذه سنة ماضية لصد الناس عن استماع الحجة، فقابلها بالصبر." }
                 ],
                 challenges: [
                     {
-                        type: "quiz",
-                        title: "تحدي المانع النفسي",
-                        question: "صديقك اقتنع بالحق سراً، لكنه صرح لك بأنه يخاف من مقاطعة أهله له إذا أعلن ذلك. كيف تتعامل معه؟",
-                        options: [
-                            { text: "أوبخه على ضعفه وأخبره أنه جبان.", correct: false },
-                            { text: "أتفهم خوفه، وأدعمه نفسياً، وأقترح عليه التدرج والحكمة في إظهار الحق.", correct: true },
-                            { text: "أعلن أنا الأمر نيابة عنه ليصبح أمام الأمر الواقع.", correct: false }
-                        ],
-                        explanation: "يجب فهم العوائق النفسية كالخوف والتقليد (القاعدة 8) والتعامل معها برحمة."
+                        type: "sort",
+                        title: "فرز التصرفات: الحكمة أم التسرع",
+                        badge: "🔀 فرز ومطابقة",
+                        instruction: "اضغط على زر (حكمة 🕊️) أو (تسرع 🔥) لفرز كل تصرف في مساره الصحيح:",
+                        items: [
+                            { id: 1, text: "طرح تصحيح الأخطاء في القروب العائلي العام أمام الجميع", target: "haste" },
+                            { id: 2, text: "مراسلة القريب بنصيحة خاصة لطيفة مشفوعة بالدعاء", target: "wisdom" },
+                            { id: 3, text: "وصف الشخص المخالف بالمعاند المكابر بمجرد رفضه أول مرة", target: "haste" },
+                            { id: 4, text: "تفهم خوف المخالف من النبذ الاجتماعي ومساندته نفسياً", target: "wisdom" }
+                        ]
                     },
                     {
-                        type: "mistake",
-                        title: "كشف الشبهة",
-                        scenario: "أثناء نقاشك مع أحدهم قال لك باستهزاء: 'كل قومنا والمدينة كلها على هذا الأمر، فكيف نكون جميعاً على خطأ وأنت وحدك على صواب؟'",
-                        question: "أي قاعدة تعالج هذه الشبهة تحديداً؟",
-                        options: [
-                            { text: "القاعدة: الكثرة والقلة ليستا معياراً لمعرفة الحق.", correct: true },
-                            { text: "القاعدة: ليس كل مخالف معانداً.", correct: false },
-                            { text: "القاعدة: النصح في السر أفضل.", correct: false }
-                        ],
-                        explanation: "الحق يعرف بالدليل وليس بعدد المتبنين له (القاعدة 9)."
-                    },
-                    {
-                        type: "conversation",
-                        title: "محاكاة النصيحة",
-                        intro: "رأيت ابن عمك ينشر معلومة عقدية خاطئة في (جروب العائلة) على الواتساب.",
-                        steps: [
-                            {
-                                text: "أين توجه له النصيحة؟",
-                                choices: [
-                                    { text: "في الجروب أمام الجميع لكي يتعلم الآخرون أيضاً.", nextId: "bad", isCorrect: false },
-                                    { text: "أراسله على الخاص (رسالة فردية) بأسلوب لطيف.", nextId: "good", isCorrect: true }
-                                ]
-                            },
-                            { id: "bad", text: "ابن عمك يرد بعناد في الجروب ويبدأ في الدفاع عن خطأه بشراسة لكي لا يبدو مخطئاً.", isEnd: true, success: false, feedback: "قلما يتراجع الشخص أمام الناس دفاعاً عن ماء وجهه (القاعدة 7)." },
-                            { id: "good", text: "ابن عمك يرد على الخاص: 'جزاك الله خيراً، لم أكن أعلم'، ويقوم بحذف الرسالة من الجروب.", isEnd: true, success: true, feedback: "أحسنت! النصيحة في السر أدعى للقبول وتمنع العناد (القاعدة 7)." }
+                        type: "puzzle",
+                        title: "تفكيك الشبهة: استخراج الأصل الفاسد",
+                        badge: "🧩 تفكيك الشبهات",
+                        instruction: "اضغط على (الجملة المفتاحية) التي تمثل أصل الشبهة المغالطة وتجاهل الحشو العاطفي:",
+                        parts: [
+                            { text: "أنت تتكلم بفصاحة، ", isCore: false },
+                            { text: "لكن مدينتنا بأكملها وملايين الناس على هذا العمل منذ مئات السنين، ", isCore: true, exp: "أصل الشبهة هو الاحتجاج بالكثرة والتقادم الزمني. والحق لا يُقاس بالكثرة (القاعدة 9)." },
+                            { text: "فكيف تخطئهم جميعاً وأنت شاب صغير؟ ", isCore: false },
+                            { text: "هذا أمر مستغرب وغير مقبول!", isCore: false }
                         ]
                     }
                 ]
             },
             {
-                title: "المرحلة الثالثة: منهجية الإقناع",
+                id: 3,
+                title: "المرحلة الثالثة: منهجية الحوار والإقناع",
                 icon: "💡",
-                color: "from-amber-400 to-orange-600",
+                gradient: "from-amber-500 to-orange-600",
                 rules: [
-                    { id: 11, icon: "📌", title: "لا نقاش إلا بعد الاتفاق على أصل يرجع إليه", desc: "قبل الحوار، اتفق مع محاورك على مرجعية مشتركة (كالقرآن أو الفطرة) لتكون حكماً." },
-                    { id: 12, icon: "🤐", title: "الرد بالشتم لا يثبت حقاً ولا يبطل باطلاً", desc: "إذا تعرضت للإساءة، قابلها بالحلم وتفنيد الحجة، ولا تنزل لمستوى الشتائم." },
-                    { id: 13, icon: "🌳", title: "علاج الأصول أولى من الانشغال بالفرعيات", desc: "ركز على الأصول الكبرى (كالتوحيد)، ولا تضيع وقتك في الخلافات التاريخية الفرعية." },
-                    { id: 14, icon: "☀️", title: "الدليل الفطري أقرب من الجدل الكلامي", desc: "خاطب القلوب بفطرة التوحيد البسيطة وبدائع صنع الله، وابتعد عن الفلسفة المعقدة." },
-                    { id: 15, icon: "🧹", title: "التخلية قبل التحلية", desc: "ساعد محاورك على إزالة التعلق بالباطل أولاً، ثم املأ قلبه بتعظيم الحق." }
+                    { id: 11, icon: "📌", title: "الاتفاق على أصل يرجع إليه الطرفان", desc: "قبل الدخول في أي مسألة، اتفق مع محاورك على مرجع مشترك (كالقرآن أو الفطرة العقلية السليمة)." },
+                    { id: 12, icon: "🤐", title: "الرد بالشتم لا يثبت حقاً ولا يبطل باطلاً", desc: "إذا رُميت بكلمة قاسية، قابلها بالحلم وتجريد الدليل، فالسباب دليل الإفلاس ويسقط الهيبة." },
+                    { id: 13, icon: "🌳", title: "علاج الأصول الكبرى أولى من الفرعيات", desc: "ركز على قضايا التوحيد الكبرى وتعظيم الله، ولا تغرق في تفاصيل تاريخية فرعية تُشتت القلوب." },
+                    { id: 14, icon: "☀️", title: "الدليل الفطري البسيط أقرب من الفلسفة", desc: "خاطب الناس بآيات الآفاق والأنفس وفطرة التوحيد، وابتعد عن التعقيدات والمصطلحات المنفرة." },
+                    { id: 15, icon: "🧹", title: "التخلية قبل التحلية في معالجة القلوب", desc: "بيّن بطلان التعلق بغير الله ونزعه أولاً برفق، ثم املأ هذا الفراغ بمحبة الله والتوكل التام عليه." }
                 ],
                 challenges: [
                     {
-                        type: "quiz",
-                        title: "تحدي التشتيت",
-                        question: "محاورك حاول تشتيت النقاش بذكر 10 خلافات تاريخية فرعية وشخصية، كيف تتصرف؟",
+                        type: "chat",
+                        title: "محاكاة الدردشة: فخ التشتيت والفرعيات",
+                        badge: "💬 حوار واتساب",
+                        scenario: "أثناء نقاشك الهادئ معه حول إخلاص الدعاء لله وحده، قاطعك فجأة ليغير المسار...",
+                        incomingMessage: "دعك من التوحيد الآن! ما قولك في النزاع التاريخي الذي حصل بين فلان وفلان قبل ألف سنة؟ ولماذا فعل كذا؟ أجبني!",
                         options: [
-                            { text: "أرد على كل نقطة فرعية ذكرها لكي لا يظن أنني عاجز عن الرد.", correct: false },
-                            { text: "أوقفه بلطف وأعيده لمناقشة الأصل العقدي الأهم الذي يترتب عليه ما سواه.", correct: true },
-                            { text: "أنسحب من النقاش فوراً.", correct: false }
-                        ],
-                        explanation: "علاج الأصول والقواعد الكلية أولى وأهم من الغرق في التفاصيل والفرعيات (القاعدة 13)."
+                            { text: "سأسرد لك تفاصيل تلك المعركة التاريخية بالتفصيل لكي تعلم أنني مطلع ولا أتهرب!", correct: false, meter: -30, botReply: "المحاور: ممتاز! وماذا عن الحادثة الأخرى؟ (وهكذا ضاع الأصل وضاع وقت الحوار).", exp: "لقد ابتلعت طُعم التشتيت وتركت الأصل العظيم وانشغلت بالفرعيات (القاعدة 13)." },
+                            { text: "يا أخي الحبيب، الخلافات التاريخية أمرها إلى الله، لكن توحيد الله وإفراده بالعبادة هو أصل نجاتي ونجاتك اليوم، فلنركز عليه.", correct: true, meter: +40, botReply: "المحاور: صدقت والله، حق الله وتوحيده هو الأهم لمصيرنا. أكمل بارك الله فيك.", exp: "حكمة واقتدار! إعادة المحاور للأصل وتذكيره بما ينفعه في آخرته يقطع التشتيت." }
+                        ]
                     },
                     {
-                        type: "mistake",
-                        title: "اكتشف سبب ضياع الحق",
-                        scenario: "أثناء الحوار، قام المحاور بشتم الداعية، فغضب الداعية ورد الشتيمة بأقوى منها دفاعاً عن نفسه، فتحول المجلس إلى عراك وصراخ.",
-                        question: "ما هو الخطأ الذي أضاع فرصة بيان الحق؟",
-                        options: [
-                            { text: "نزول الداعية لمستوى الشتم والانتصار للنفس.", correct: true },
-                            { text: "عدم استخدام أدلة عقلية كافية.", correct: false },
-                            { text: "عدم الاتفاق على مرجعية.", correct: false }
-                        ],
-                        explanation: "الرد بالشتم والسب لا يثبت حقاً (القاعدة 12)، بل يحول النقاش إلى شجار شخصي يضيع فيه الحق."
-                    },
-                    {
-                        type: "conversation",
-                        title: "ترتيب الإقناع",
-                        intro: "تريد دعوة شخص يعلق التمائم للاعتقاد بأنها تنفع من دون الله.",
-                        steps: [
-                            {
-                                text: "ما هي الخطوة الأولى (التخلية)؟",
-                                choices: [
-                                    { text: "أعلمه أذكار الصباح والمساء فوراً.", nextId: "bad", isCorrect: false },
-                                    { text: "أبين له بالأدلة الفطرية أن هذه القطعة لا تنفع ولا تضر لتسقط من قلبه أولاً.", nextId: "good", isCorrect: true }
-                                ]
-                            },
-                            { id: "bad", text: "سيقرأ الأذكار ولكنه سيبقي التميمة معلقة لأنه لم يقتنع ببطلانها.", isEnd: true, success: false, feedback: "يجب إخراج الباطل أولاً (التخلية) قبل غرس الحق (القاعدة 15)." },
-                            { id: "good", text: "بعد أن اقتنع بنزعها، علمته التوكل على الله والأذكار (التحلية).", isEnd: true, success: true, feedback: "رائع! التخلية قبل التحلية تضمن سلامة المعتقد (القاعدة 15)." }
+                        type: "sort",
+                        title: "فرز منهجية الدعوة: التخلية والتحلية",
+                        badge: "🔀 فرز ومطابقة",
+                        instruction: "شخص يعلق تميمة يعتقد أنها تحفظه من العين؛ صنف هذه الخطوات الدعوية:",
+                        items: [
+                            { id: 1, text: "توبيخه بعنف وسحب التميمة بيده بالقوة أمام الحاضرين", target: "haste" },
+                            { id: 2, text: "إقناعه أولاً بأن التميمة جماد عاجز لا ينفع ولا يضر (تخلية)", target: "wisdom" },
+                            { id: 3, text: "ملء قلبه بالتوكل على الله وحده وتعليمه المعوذات (تحلية)", target: "wisdom" },
+                            { id: 4, text: "الاستهزاء بعقله وتركه دون توضيح البديل الشرعي", target: "haste" }
                         ]
                     }
                 ]
             },
             {
-                title: "المرحلة الرابعة: الأخلاق والإنصاف",
+                id: 4,
+                title: "المرحلة الرابعة: الأخلاق وضوابط الأحكام",
                 icon: "👑",
-                color: "from-purple-400 to-pink-600",
+                gradient: "from-purple-600 to-pink-600",
                 rules: [
-                    { id: 16, icon: "💖", title: "أهل السنة أعرف بالحق وأرحم بالخلق", desc: "اجعل دافعك هو الرحمة والشفقة بقومك، لا الاستعلاء عليهم أو الفخر." },
-                    { id: 17, icon: "🔍", title: "لا تلازم بين بطلان القول وتكفير القائل", desc: "القول قد يكون خطأ، لكن القائل معذور بجهل؛ ففرق بين الحكم على الفعل والفاعل." },
-                    { id: 18, icon: "📖", title: "يُحكم على المذاهب من كتب أئمتها لا عوامها", desc: "اعتمد على المصادر المعتمدة للمخالف ولا تحتج عليه بتصرفات وشطحات العوام." },
-                    { id: 19, icon: "⚖️", title: "الحق قيمته في ذاته لا في قائله", desc: "اقبل الحق ممن جاء به مهما كان شأنه، فالإنصاف يزيدك احتراماً." }
+                    { id: 16, icon: "💖", title: "أهل السنة أعرف بالحق وأرحم بالخلق", desc: "اجعل دافعك الرحمة والشفقة بمن ضل، لا الاستعلاء عليه أو الفرح بخطئه؛ فالهداية محض فضل من الله." },
+                    { id: 17, icon: "🔍", title: "لا تلازم بين بطلان القول وتكفير القائل", desc: "القول قد يكون بدعة أو ضلالاً، لكن قائله قد يكون معذوراً بجهل أو تأويل؛ ففرق بين الفعل والفاعل." },
+                    { id: 18, icon: "📖", title: "يُحكم على المذاهب من كتبها لا من عوامها", desc: "إذا أردت بيان خلل فرقة، فارجع لكتب علمائها المعتمدة، ولا تحتج عليها بتصرفات وشطحات الجهال." },
+                    { id: 19, icon: "⚖️", title: "الحق قيمته في ذاته لا في قائله", desc: "اقبل الصواب والحق ممن جاء به ولو كان خصماً، ورُد الباطل على من جاء به ولو كان قريباً حبيباً." }
                 ],
                 challenges: [
                     {
-                        type: "quiz",
-                        title: "تحدي الإنصاف",
-                        question: "رأيت رجلاً بسيطاً من العوام يمارس خطأً عقدياً عن جهل وحسن نية، كيف تحكم عليه؟",
+                        type: "chat",
+                        title: "محاكاة الدردشة: اختبار الإنصاف والموضوعية",
+                        badge: "💬 حوار واتساب",
+                        scenario: "أثناء الحوار، أحضر لك محاورك آية قرآنية ودليلاً صريحاً يثبت صحة وجهة نظره في مسألة فرعية كنت تخالفه فيها...",
+                        incomingMessage: "انظر لهذا الدليل الصريح، ألا يثبت أنني كنت محقاً في هذه النقطة وكنت أنت مخطئاً فيها؟",
                         options: [
-                            { text: "أحكم عليه بالكفر والضلال فوراً لأن الفعل صريح.", correct: false },
-                            { text: "أبين بطلان الفعل، وألتمس العذر للفاعل بالجهل، وأعلمه بلطف.", correct: true },
-                            { text: "أتجاهل الفعل تماماً بحجة أنه مسكين وحسن النية.", correct: false }
-                        ],
-                        explanation: "يجب التفريق بين الحكم على القول/الفعل بأنه باطل، وبين الحكم على الفاعل المعين الذي قد يكون معذوراً بجهل (القاعدة 17)."
+                            { text: "أكابر وأحاول تأويل الدليل وأغير مسار الحديث سريعاً حتى لا أبدو مهزوماً أمامه.", correct: false, meter: -45, botReply: "المحاور: (في نفسه) أنت لا تبحث عن الحق بل عن الانتصار لنفسك كالبقية!", exp: "المكابرة ورد الدليل الواضح يسقط هيبتك ويثبت عدم إخلاص النية (القاعدة 1 و 19)." },
+                            { text: "أحسنت القول، جزاك الله خيراً، الدليل واضح تماماً وأنا أرجع إلى الحق بصدر رحب، فالحق غايتنا جميعاً.", correct: true, meter: +50, botReply: "المحاور: (بإعجاب شديد) والله ما رأيت أعدل ولا أصدق منك! زاد احترامي لك جداً.", exp: "قمة الإنصاف والحكمة! قبول الحق يزيد الداعية عزة ويفتح قلب المحاور لسماع باقي كلامك." }
+                        ]
                     },
                     {
-                        type: "mistake",
-                        title: "كشف الاحتجاج الخاطئ",
-                        scenario: "شخص يريد إثبات بطلان مذهب معين، فقام بتصوير تصرف غريب ومضحك لأحد عوام ذلك المذهب في الشارع، ونشره كدليل على بطلانهم.",
-                        question: "ما هو الخطأ في هذه المنهجية؟",
-                        options: [
-                            { text: "يحكم على المذاهب من كتب أئمتها المعتمدة لا من أفعال عوامها.", correct: true },
-                            { text: "التصوير غير واضح ويجب أن يكون بجودة أعلى.", correct: false },
-                            { text: "لا يوجد خطأ، فهذا يثبت بطلانهم.", correct: false }
-                        ],
-                        explanation: "الإنصاف يقتضي أخذ الأقوال من مصادرها المعتمدة (القاعدة 18)."
-                    },
-                    {
-                        type: "quiz", // Final summary challenge
-                        title: "التحدي الشامل والأخير",
-                        question: "أثناء حوارك مع مخالف، قدم لك دليلاً صحيحاً يثبت به نقطة معينة كنت تخالفه فيها، ماذا تفعل كـ (محاور حكيم)؟",
-                        options: [
-                            { text: "أكابر وأرفض الدليل لكي لا أظهر بمظهر الضعيف في النقاش.", correct: false },
-                            { text: "أقبل الحق منه بصدر رحب وأشكره، لأن الحق قيمته في ذاته.", correct: true },
-                            { text: "أغير الموضوع بسرعة لتجاوز هذه النقطة.", correct: false }
-                        ],
-                        explanation: "الحق ضالة المؤمن، وقبوله من أي شخص هو قمة الإنصاف والحكمة (القاعدة 19)."
+                        type: "puzzle",
+                        title: "تفكيك الشبهة: الاستدلال بجهل العوام",
+                        badge: "🧩 تفكيك الشبهات",
+                        instruction: "اضغط على (الجملة التي تمثل خطأ منهجياً في الاحتجاج والنقد):",
+                        parts: [
+                            { text: "إن هذا المذهب يقع في انحرافات متعددة، ", isCore: false },
+                            { text: "والدليل الحاسم على بطلانه: ", isCore: false },
+                            { text: "انظروا إلى تصرفات هؤلاء الجهلة من عوامهم في المقاطع المصورة وما يفعلونه من خرافات في الشارع! ", isCore: true, exp: "خطأ منهجي كبير! يُحكم على المذاهب من كتب أئمتها المعتمدة لا من جهل وشطحات العوام (القاعدة 18)." },
+                            { text: "وهذا يسقط منهجهم تماماً.", isCore: false }
+                        ]
                     }
                 ]
             }
         ];
+        /* ==========================================================================
+           2. GLOBAL STATE & SOUND ENGINE (WEB AUDIO API)
+           ========================================================================== */
+        let currentLevelIdx = 0;
+        let currentChallengeIdx = 0;
+        let fontSizeLevel = 1; // 0: sm, 1: base, 2: lg, 3: xl
+        
+        // Stumble Box (Review System)
+        let stumbles = [];
+        let isReviewModeActive = false;
+        let currentReviewIdx = 0;
+        let preReviewLevelIdx = 0;
+        let preReviewChallengeIdx = 0;
 
-        let currentLevelIndex = 0;
-        let currentChallengeIndex = 0;
-        let fontSizeLevel = 1; // 0=small, 1=normal, 2=large, 3=xl
-        
-        // Simple Audio Synthesizer to avoid external dependencies
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        function playTone(freq, type, duration, vol=0.1) {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
+        // Dynamic Challenge Sub-States
+        let chatMeterValue = 50;
+        let activeSortItems = [];
+        let sortedBaskets = { wisdom: [], haste: [] };
+
+        // Pure Web Audio Synth (Zero external audio dependencies)
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
         }
 
-        const sounds = {
-            click: () => playTone(600, 'sine', 0.1, 0.05),
-            flip: () => playTone(300, 'triangle', 0.1, 0.05),
+        function playBeep(freq, type, duration, volume = 0.08) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(volume, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch (e) {
+                // Audio safely ignored if browser blocked
+            }
+        }
+
+        const Sound = {
+            tap: () => playBeep(450, 'sine', 0.08, 0.05),
+            cardFlip: () => playBeep(320, 'triangle', 0.12, 0.06),
+            itemDrop: () => playBeep(520, 'sine', 0.1, 0.05),
             success: () => {
-                playTone(440, 'sine', 0.1, 0.1);
-                setTimeout(() => playTone(554, 'sine', 0.1, 0.1), 100);
-                setTimeout(() => playTone(659, 'sine', 0.3, 0.1), 200);
+                playBeep(523, 'sine', 0.1, 0.08);
+                setTimeout(() => playBeep(659, 'sine', 0.12, 0.08), 90);
+                setTimeout(() => playBeep(783, 'sine', 0.25, 0.08), 180);
             },
             error: () => {
-                playTone(200, 'sawtooth', 0.2, 0.1);
-                setTimeout(() => playTone(150, 'sawtooth', 0.3, 0.1), 150);
+                playBeep(240, 'sawtooth', 0.15, 0.09);
+                setTimeout(() => playBeep(180, 'sawtooth', 0.25, 0.09), 120);
             },
-            fanfare: () => {
-                [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
-                    setTimeout(() => playTone(f, 'square', 0.2, 0.1), i * 150);
+            victory: () => {
+                [440, 554, 659, 880].forEach((freq, i) => {
+                    setTimeout(() => playBeep(freq, 'triangle', 0.3, 0.1), i * 140);
                 });
             }
         };
-
-        // Confetti Engine
-        function fireConfetti() {
+        /* ==========================================================================
+           3. UI CONTROLS & CONFETTI ENGINE
+           ========================================================================== */
+        function triggerConfetti() {
             const canvas = document.getElementById('confetti-canvas');
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
-            const pieces = [];
-            const colors = ['#22c55e', '#3b82f6', '#f59e0b', '#ec4899', '#a855f7'];
+            const particles = [];
+            const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6', '#14b8a6'];
             
-            for (let i = 0; i < 150; i++) {
-                pieces.push({
+            for (let i = 0; i < 120; i++) {
+                particles.push({
                     x: canvas.width / 2,
-                    y: canvas.height / 2 + 100,
-                    vx: (Math.random() - 0.5) * 20,
-                    vy: (Math.random() - 1) * 20 - 5,
-                    size: Math.random() * 10 + 5,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 16,
+                    vy: (Math.random() - 0.8) * 16,
+                    size: Math.random() * 8 + 4,
                     color: colors[Math.floor(Math.random() * colors.length)],
-                    rot: Math.random() * 360,
-                    rotSpeed: (Math.random() - 0.5) * 10
+                    rotation: Math.random() * 360,
+                    rotationSpeed: (Math.random() - 0.5) * 8
                 });
             }
-
-            function animate() {
+            
+            let frameCount = 0;
+            function render() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                let active = false;
-                pieces.forEach(p => {
+                let stillActive = false;
+                
+                particles.forEach(p => {
                     p.x += p.vx;
                     p.y += p.vy;
-                    p.vy += 0.5; // gravity
-                    p.rot += p.rotSpeed;
-                    if (p.y < canvas.height) active = true;
+                    p.vy += 0.4; // gravity
+                    p.rotation += p.rotationSpeed;
+                    
+                    if (p.y < canvas.height + 20) stillActive = true;
                     
                     ctx.save();
                     ctx.translate(p.x, p.y);
-                    ctx.rotate(p.rot * Math.PI / 180);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
                     ctx.fillStyle = p.color;
-                    ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
                     ctx.restore();
                 });
                 
-                if (active) requestAnimationFrame(animate);
-                else ctx.clearRect(0, 0, canvas.width, canvas.height);
+                frameCount++;
+                if (stillActive && frameCount < 180) {
+                    requestAnimationFrame(render);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
             }
-            animate();
-        }
-
-        // Shuffle Array (for randomizing choices)
-        function shuffleArray(array) {
-            const newArr = [...array];
-            for (let i = newArr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-            }
-            return newArr;
-        }
-
-        // Font & Theme Controls
-        function changeFontSize(step) {
-            sounds.click();
-            const sizes = ['text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl'];
-            fontSizeLevel = Math.max(0, Math.min(sizes.length - 1, fontSizeLevel + step));
-            
-            document.body.classList.remove(...sizes);
-            document.body.classList.add(sizes[fontSizeLevel]);
+            render();
         }
 
         function toggleTheme() {
-            sounds.click();
+            Sound.tap();
             const html = document.documentElement;
             html.classList.toggle('dark');
             const isDark = html.classList.contains('dark');
-            document.getElementById('theme-toggle').innerText = isDark ? '☀️' : '🌙';
+            document.getElementById('theme-toggle-btn').innerText = isDark ? '☀️' : '🌙';
         }
 
-        // Progress Bar
-        function updateProgress(percent) {
-            document.getElementById('progress-fill').style.width = `${percent}%`;
-            document.getElementById('progress-text').innerText = `${percent}%`;
+        function changeFontSize(direction) {
+            Sound.tap();
+            const fontClasses = ['text-sm', 'text-base', 'text-lg', 'text-xl'];
+            document.body.classList.remove(fontClasses[fontSizeLevel]);
+            fontSizeLevel = Math.max(0, Math.min(fontClasses.length - 1, fontSizeLevel + direction));
+            document.body.classList.add(fontClasses[fontSizeLevel]);
         }
 
-        const contentDiv = document.getElementById('app-content');
+        function setProgressBar(percent) {
+            const bar = document.getElementById('progress-bar-fill');
+            if (bar) bar.style.width = `${percent}%`;
+        }
 
+        function shuffleList(arr) {
+            const cloned = [...arr];
+            for (let i = cloned.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cloned[i], cloned[j]] = [cloned[j], cloned[i]];
+            }
+            return cloned;
+        }
+        /* ==========================================================================
+           4. STUMBLE & MASTERY REVIEW SYSTEM
+           ========================================================================== */
+        function registerStumble(challenge, explanation) {
+            if (isReviewModeActive) return; // Prevent duplication inside review
+            
+            const alreadyExists = stumbles.some(s => s.levelIdx === currentLevelIdx && s.challengeIdx === currentChallengeIdx);
+            if (!alreadyExists) {
+                stumbles.push({
+                    levelIdx: currentLevelIdx,
+                    challengeIdx: currentChallengeIdx,
+                    challengeData: challenge,
+                    exp: explanation
+                });
+                renderStumbleHeaderBadge();
+            }
+        }
+
+        function renderStumbleHeaderBadge() {
+            const btn = document.getElementById('stumble-btn');
+            const counter = document.getElementById('stumble-count');
+            if (!btn || !counter) return;
+            
+            counter.innerText = stumbles.length;
+            if (stumbles.length > 0) {
+                btn.classList.remove('hidden');
+                btn.classList.add('flex');
+            } else {
+                btn.classList.add('hidden');
+                btn.classList.remove('flex');
+            }
+        }
+
+        function openReviewMode() {
+            if (stumbles.length === 0) return;
+            Sound.tap();
+            
+            if (!isReviewModeActive) {
+                preReviewLevelIdx = currentLevelIdx;
+                preReviewChallengeIdx = currentChallengeIdx;
+            }
+            
+            isReviewModeActive = true;
+            currentReviewIdx = 0;
+            renderReviewDashboard();
+        }
+
+        function exitReviewMode() {
+            Sound.tap();
+            isReviewModeActive = false;
+            currentLevelIdx = preReviewLevelIdx;
+            currentChallengeIdx = preReviewChallengeIdx;
+            
+            if (currentLevelIdx >= appData.length) {
+                verifyGraduation();
+            } else {
+                renderCurrentChallenge();
+            }
+        }
+
+        function renderReviewDashboard() {
+            const main = document.getElementById('app-content');
+            main.innerHTML = `
+                <div class="max-w-xl w-full bg-white dark:bg-dark-card rounded-3xl p-6 sm:p-8 shadow-xl border-2 border-rose-200 dark:border-rose-900/50 text-center animate-fade-in">
+                    <div class="text-6xl mb-4">⚠️</div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-rose-600 dark:text-rose-400 mb-3">
+                        تبويب التعثرات والمراجعة
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-300 mb-6 text-sm sm:text-base leading-relaxed">
+                        المحاور الحكيم يتعلم من خطئه ويتقن ما فاته. لديك حالياً 
+                        <span class="inline-block bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 px-3 py-0.5 rounded-full font-black mx-1">${stumbles.length}</span> 
+                        مواقف تحتاج لإعادة إتقانها قبل فتح الشهادة النهائية.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button onclick="launchReviewItem()" class="px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95">
+                            ابدأ التدريب الآن 💪
+                        </button>
+                        <button onclick="exitReviewMode()" class="px-6 py-3 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 font-bold rounded-xl transition">
+                            العودة للرحلة
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function launchReviewItem() {
+            if (stumbles.length === 0) {
+                exitReviewMode();
+                return;
+            }
+            if (currentReviewIdx >= stumbles.length) {
+                currentReviewIdx = 0;
+            }
+            
+            const stumbleItem = stumbles[currentReviewIdx];
+            currentLevelIdx = stumbleItem.levelIdx;
+            currentChallengeIdx = stumbleItem.challengeIdx;
+            
+            renderCurrentChallenge();
+        }
+
+        function handleChallengeOutcome(isCorrect, explanation, challenge) {
+            if (isCorrect) {
+                Sound.success();
+                triggerConfetti();
+                if (isReviewModeActive) {
+                    stumbles.splice(currentReviewIdx, 1);
+                    renderStumbleHeaderBadge();
+                }
+                return true;
+            } else {
+                Sound.error();
+                if (!isReviewModeActive) {
+                    registerStumble(challenge, explanation);
+                } else {
+                    currentReviewIdx++;
+                }
+                return false;
+            }
+        }
+        /* ==========================================================================
+           5. SCREEN NAVIGATION: WELCOME, LEVEL CARDS & TRANSITIONS
+           ========================================================================== */
         function renderWelcome() {
-            updateProgress(0);
-            contentDiv.innerHTML = `
+            setProgressBar(0);
+            const main = document.getElementById('app-content');
+            main.innerHTML = `
                 <div class="max-w-2xl text-center animate-fade-in">
                     <div class="text-7xl mb-6">🧭</div>
-                    <h2 class="text-4xl md:text-5xl font-black text-gray-800 dark:text-white mb-6 leading-tight">
-                        منصة <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-blue-600">رحلة الحكمة والدعوة</span>
+                    <span class="inline-block px-4 py-1 bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 rounded-full font-bold text-sm mb-4">
+                        تأهيل شبابي تفاعلي • بعمر 18 - 20 سنة
+                    </span>
+                    <h2 class="text-3xl sm:text-5xl font-black text-slate-800 dark:text-white mb-6 leading-tight">
+                        منصة <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-emerald-500">رحلة الحكمة والدعوة</span>
                     </h2>
-                    <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10 leading-relaxed font-medium">
-                        تطبيق تفاعلي لتأهيل الشباب على مهارات الحوار والدعوة بالحكمة مع قومهم، عبر قواعد علمية وتطبيقات عملية تحاكي الواقع.
+                    <p class="text-base sm:text-xl text-slate-600 dark:text-slate-300 mb-8 leading-relaxed font-medium">
+                        تطبيق تعليمي ومحاكاة مواقف حوارية حقيقية لامتلاك مهارات الدعوة بالحكمة والرفق، بأسلوب تطبيقي ممتع ومفعم بالتحديات.
                     </p>
-                    <button onclick="startJourney()" class="group relative px-8 py-4 bg-gradient-to-r from-primary-500 to-green-600 text-white font-bold text-xl rounded-2xl shadow-lg hover:shadow-glow transition-all transform hover:-translate-y-1 overflow-hidden">
-                        <span class="relative z-10 flex items-center gap-2">
-                            ابدأ رحلة الحكمة <span>🚀</span>
-                        </span>
-                        <div class="absolute inset-0 h-full w-full bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out"></div>
+                    <button onclick="startJourney()" class="px-8 py-4 bg-gradient-to-r from-primary-600 to-emerald-600 hover:from-primary-700 hover:to-emerald-700 text-white font-black text-lg sm:text-xl rounded-2xl shadow-xl hover:shadow-2xl transition transform active:scale-95 inline-flex items-center gap-3">
+                        <span>ابدأ رحلة الحكمة والدعوة</span>
+                        <span class="text-2xl">🚀</span>
                     </button>
                 </div>
             `;
         }
 
         function startJourney() {
-            sounds.click();
-            currentLevelIndex = 0;
-            renderLevel(currentLevelIndex);
+            Sound.tap();
+            currentLevelIdx = 0;
+            renderLevelCardsScreen();
         }
 
-        function renderLevel(index) {
-            const level = appData[index];
-            const progress = Math.round((index / (appData.length + 1)) * 100); // +1 for certificate
-            updateProgress(progress);
+        function renderLevelCardsScreen() {
+            const level = appData[currentLevelIdx];
+            const progress = Math.round((currentLevelIdx / appData.length) * 80);
+            setProgressBar(progress);
             
-            let cardsHTML = level.rules.map((rule, i) => `
-                <div class="flip-card perspective-1000 h-64 w-full cursor-pointer" onclick="toggleCard(this)">
-                    <div class="flip-card-inner relative w-full h-full shadow-md hover:shadow-xl transition-shadow rounded-2xl">
-                        <!-- Front -->
-                        <div class="absolute w-full h-full backface-hidden bg-white dark:bg-dark-card border-2 border-gray-100 dark:border-gray-700 rounded-2xl p-6 flex flex-col items-center justify-center text-center">
-                            <span class="text-4xl mb-4 bg-gray-100 dark:bg-slate-700 p-4 rounded-full">${rule.icon}</span>
-                            <span class="absolute top-4 right-4 text-gray-300 dark:text-gray-600 font-black text-2xl">#${rule.id}</span>
-                            <h3 class="font-bold text-lg md:text-xl text-gray-800 dark:text-white leading-snug">${rule.title}</h3>
-                            <p class="text-sm text-primary-500 mt-4 font-semibold animate-pulse">اضغط للكشف 👆</p>
+            let cardsHTML = level.rules.map((rule) => `
+                <div class="flip-card perspective-1000 h-64 w-full cursor-pointer select-none" onclick="flipRuleCard(this)">
+                    <div class="flip-card-inner relative w-full h-full rounded-2xl shadow-md border border-slate-200 dark:border-slate-700">
+                        <!-- Front View -->
+                        <div class="absolute inset-0 backface-hidden bg-white dark:bg-dark-card rounded-2xl p-5 flex flex-col justify-between items-center text-center">
+                            <div class="w-full flex justify-between items-center">
+                                <span class="text-xs font-black px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-lg">القاعدة #${rule.id}</span>
+                                <span class="text-2xl">${rule.icon}</span>
+                            </div>
+                            <h3 class="font-black text-base sm:text-lg text-slate-800 dark:text-white leading-snug px-2">
+                                ${rule.title}
+                            </h3>
+                            <div class="text-xs font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50 px-3 py-1.5 rounded-full flex items-center gap-1">
+                                <span>اضغط لمعرفة التطبيق العملي</span>
+                                <span>👆</span>
+                            </div>
                         </div>
-                        <!-- Back -->
-                        <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-gradient-to-br ${level.color} text-white rounded-2xl p-6 flex flex-col justify-center items-center text-center shadow-inner">
-                            <h4 class="font-black text-xl mb-3 border-b border-white/30 pb-2 w-full">التطبيق العملي</h4>
-                            <p class="font-medium text-lg leading-relaxed">${rule.desc}</p>
+                        <!-- Back View -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br ${level.gradient} text-white rounded-2xl p-6 flex flex-col justify-center items-center text-center">
+                            <span class="text-xs uppercase font-bold tracking-wider text-white/80 mb-2 border-b border-white/20 pb-1 w-full">التطبيق العملي والمثال</span>
+                            <p class="font-bold text-sm sm:text-base leading-relaxed">
+                                ${rule.desc}
+                            </p>
+                            <span class="text-xs text-white/70 mt-3">اضغط للعودة ↺</span>
                         </div>
                     </div>
                 </div>
             `).join('');
 
-            contentDiv.innerHTML = `
+            const main = document.getElementById('app-content');
+            main.innerHTML = `
                 <div class="w-full max-w-5xl animate-fade-in">
-                    <div class="text-center mb-10">
-                        <span class="text-5xl mb-4 inline-block">${level.icon}</span>
-                        <h2 class="text-3xl md:text-4xl font-black text-gray-800 dark:text-white mb-2">${level.title}</h2>
-                        <p class="text-gray-500 dark:text-gray-400 font-medium">اقرأ القواعد واقلب البطاقات لفهم التطبيق العملي، ثم استعد لمعمل التحديات!</p>
+                    <!-- Stage Header -->
+                    <div class="text-center mb-8">
+                        <span class="text-5xl mb-2 inline-block">${level.icon}</span>
+                        <h2 class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white mb-2">
+                            ${level.title}
+                        </h2>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm sm:text-base font-medium">
+                            اقلب البطاقات لقراءة التطبيقات العملية، ثم استعد للدخول إلى معمل المحاكاة والتحديات!
+                        </p>
                     </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+
+                    <!-- Cards Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-10">
                         ${cardsHTML}
                     </div>
-                    
+
+                    <!-- Action Button -->
                     <div class="text-center">
-                        <button onclick="enterSimulationLab()" class="px-8 py-3 bg-gray-800 dark:bg-slate-700 text-white font-bold text-lg rounded-xl shadow-md hover:bg-gray-900 dark:hover:bg-slate-600 transition-colors flex items-center gap-2 mx-auto">
-                            دخول معمل المحاكاة <span>🧪</span>
+                        <button onclick="launchSimulationLab()" class="px-8 py-3.5 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 font-black text-base sm:text-lg rounded-xl shadow-lg transition transform active:scale-95 inline-flex items-center gap-2">
+                            <span>دخول معمل المحاكاة والتطبيق</span>
+                            <span class="text-xl">🧪</span>
                         </button>
                     </div>
                 </div>
             `;
         }
 
-        function toggleCard(element) {
-            sounds.flip();
-            element.classList.toggle('flipped');
+        function flipRuleCard(el) {
+            Sound.cardFlip();
+            el.classList.toggle('flipped');
         }
 
-        function enterSimulationLab() {
-            sounds.click();
-            currentChallengeIndex = 0;
-            renderChallenge();
+        function launchSimulationLab() {
+            Sound.tap();
+            currentChallengeIdx = 0;
+            renderCurrentChallenge();
         }
-
-        function renderChallenge() {
-            const level = appData[currentLevelIndex];
-            const challenge = level.challenges[currentChallengeIndex];
+        /* ==========================================================================
+           6. GAMIFIED CHALLENGE RENDERERS
+           ========================================================================== */
+        function renderCurrentChallenge() {
+            const level = appData[currentLevelIdx];
+            const challenge = level.challenges[currentChallengeIdx];
+            const main = document.getElementById('app-content');
             
-            let challengeHTML = '';
+            const reviewBanner = isReviewModeActive 
+                ? `<div class="mb-4 bg-rose-600 text-white text-center py-2 px-4 rounded-xl text-xs sm:text-sm font-bold shadow-md animate-pulse">⚠️ أنت في وضع مراجعة التعثرات وتصحيحها</div>`
+                : '';
+
+            let challengeHTML = `<div class="w-full max-w-2xl mx-auto animate-fade-in">${reviewBanner}`;
             
-            if (challenge.type === 'quiz' || challenge.type === 'mistake') {
-                const shuffledOptions = shuffleArray(challenge.options);
-                
-                challengeHTML = `
-                    <div id="challenge-card" class="bg-white dark:bg-dark-card rounded-3xl p-8 shadow-lg border-2 border-gray-100 dark:border-gray-700 w-full max-w-3xl mx-auto transition-all">
-                        <div class="inline-block px-4 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 rounded-full text-sm font-bold mb-6">
-                            ${challenge.title} (${currentChallengeIndex + 1}/${level.challenges.length})
-                        </div>
-                        
-                        ${challenge.scenario ? `<div class="p-4 bg-gray-50 dark:bg-slate-800 rounded-xl mb-6 border-r-4 border-gray-400 italic text-gray-600 dark:text-gray-300">"${challenge.scenario}"</div>` : ''}
-                        
-                        <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-8 leading-snug">${challenge.question}</h3>
-                        
-                        <div class="flex flex-col gap-4">
-                            ${shuffledOptions.map((opt, i) => `
-                                <button onclick="handleAnswer(this, ${opt.correct}, '${challenge.explanation.replace(/'/g, "\\'")}')" class="text-right p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 font-medium text-lg transition-all">
-                                    ${opt.text}
-                                </button>
-                            `).join('')}
-                        </div>
-                        
-                        <div id="feedback-area" class="mt-6 hidden rounded-xl p-4 font-bold text-lg"></div>
-                        <button id="next-btn" onclick="nextChallenge()" class="mt-6 hidden w-full py-4 bg-primary-500 text-white font-bold rounded-xl shadow-md hover:bg-primary-600 transition-colors text-lg">التالي</button>
-                    </div>
-                `;
-            } else if (challenge.type === 'conversation') {
-                // Interactive Tree initialization
-                challengeHTML = renderConversationStep(challenge, 0);
+            if (challenge.type === 'chat') {
+                challengeHTML += buildChatHTML(challenge);
+            } else if (challenge.type === 'sort') {
+                challengeHTML += buildSortHTML(challenge);
+            } else if (challenge.type === 'puzzle') {
+                challengeHTML += buildPuzzleHTML(challenge);
+            } else if (challenge.type === 'cooldown') {
+                challengeHTML += buildCooldownHTML(challenge);
             }
 
-            contentDiv.innerHTML = `<div class="w-full animate-fade-in">${challengeHTML}</div>`;
+            challengeHTML += `</div>`;
+            main.innerHTML = challengeHTML;
+
+            // Post-render attachments
+            if (challenge.type === 'sort') {
+                initSortState(challenge);
+            }
         }
 
-        function handleAnswer(btn, isCorrect, explanation) {
-            const card = document.getElementById('challenge-card');
-            const feedbackArea = document.getElementById('feedback-area');
-            const nextBtn = document.getElementById('next-btn');
-            
-            // Disable all buttons
-            const buttons = card.querySelectorAll('button:not(#next-btn)');
-            buttons.forEach(b => {
-                b.disabled = true;
-                b.classList.add('opacity-50', 'cursor-not-allowed');
-            });
-
-            btn.classList.remove('opacity-50', 'hover:border-primary-500', 'hover:bg-primary-50');
-
-            if (isCorrect) {
-                sounds.success();
-                fireConfetti();
-                btn.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/30', 'dark:border-green-400', 'shadow-glow');
-                
-                feedbackArea.innerHTML = `✅ أحسنت! <span class="font-normal block mt-2">${explanation}</span>`;
-                feedbackArea.className = "mt-6 rounded-xl p-5 font-bold text-lg bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200 border border-green-200 dark:border-green-800 block animate-fade-in";
+        function advanceChallenge() {
+            if (isReviewModeActive) {
+                launchReviewItem();
             } else {
-                sounds.error();
-                card.classList.add('animate-shake');
-                setTimeout(() => card.classList.remove('animate-shake'), 500);
-                
-                btn.classList.add('border-red-500', 'bg-red-50', 'dark:bg-red-900/30', 'dark:border-red-400', 'shadow-glow-red');
-                
-                feedbackArea.innerHTML = `❌ إجابة غير دقيقة. <span class="font-normal block mt-2 text-gray-700 dark:text-gray-300">التصرف الحكيم: ${explanation}</span>`;
-                feedbackArea.className = "mt-6 rounded-xl p-5 font-bold text-lg bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200 border border-red-200 dark:border-red-800 block animate-fade-in";
-            }
-
-            nextBtn.classList.remove('hidden');
-            nextBtn.classList.add('block', 'animate-fade-in');
-        }
-
-        function renderConversationStep(challenge, stepIndex, specificStepId = null) {
-            let step;
-            if (specificStepId) {
-                step = challenge.steps.find(s => s.id === specificStepId);
-            } else {
-                step = challenge.steps[0];
-            }
-
-            if (step.isEnd) {
-                if(step.success) { sounds.success(); fireConfetti(); } else { sounds.error(); }
-                
-                return `
-                    <div class="bg-white dark:bg-dark-card rounded-3xl p-8 shadow-lg border-2 ${step.success ? 'border-green-500 shadow-glow' : 'border-red-500 shadow-glow-red'} w-full max-w-3xl mx-auto text-center animate-fade-in">
-                        <div class="text-6xl mb-4">${step.success ? '🎉' : '💔'}</div>
-                        <h3 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">${step.text}</h3>
-                        <p class="text-lg font-medium p-4 rounded-xl ${step.success ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200'}">${step.feedback}</p>
-                        <button onclick="nextChallenge()" class="mt-8 px-8 py-3 bg-primary-500 text-white font-bold rounded-xl shadow-md hover:bg-primary-600 transition-colors text-lg">متابعة الرحلة</button>
-                    </div>
-                `;
-            }
-
-            const choicesHTML = step.choices.map(c => `
-                <button onclick="handleConversationChoice(${currentLevelIndex}, ${currentChallengeIndex}, '${c.nextId}')" class="text-right p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600 hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 font-medium text-lg transition-all flex items-center gap-3">
-                    <span class="text-2xl">💬</span> <span>${c.text}</span>
-                </button>
-            `).join('');
-
-            return `
-                <div class="bg-white dark:bg-dark-card rounded-3xl p-8 shadow-lg border-2 border-gray-100 dark:border-gray-700 w-full max-w-3xl mx-auto animate-fade-in">
-                    <div class="inline-block px-4 py-1 bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 rounded-full text-sm font-bold mb-6">
-                        ${challenge.title}
-                    </div>
-                    <div class="p-5 bg-blue-50 dark:bg-slate-800 rounded-2xl mb-8 border border-blue-100 dark:border-slate-700 relative">
-                        <span class="absolute -top-4 -right-4 text-4xl">🧑‍𱀽</span>
-                        <p class="font-bold text-xl text-gray-800 dark:text-white leading-relaxed pr-6">${challenge.intro || step.text}</p>
-                    </div>
-                    ${challenge.intro ? `<h4 class="font-bold text-lg mb-4 text-gray-600 dark:text-gray-400">${step.text}</h4>` : ''}
-                    <div class="flex flex-col gap-4">
-                        ${choicesHTML}
-                    </div>
-                </div>
-            `;
-        }
-
-        window.handleConversationChoice = function(lvlIdx, chalIdx, nextId) {
-            sounds.click();
-            const challenge = appData[lvlIdx].challenges[chalIdx];
-            const html = renderConversationStep(challenge, null, nextId);
-            contentDiv.innerHTML = `<div class="w-full">${html}</div>`;
-        }
-
-        window.nextChallenge = function() {
-            currentChallengeIndex++;
-            if (currentChallengeIndex < appData[currentLevelIndex].challenges.length) {
-                renderChallenge();
-            } else {
-                // End of level
-                currentLevelIndex++;
-                if (currentLevelIndex < appData.length) {
-                    renderLevelTransition();
+                currentChallengeIdx++;
+                const level = appData[currentLevelIdx];
+                if (currentChallengeIdx < level.challenges.length) {
+                    renderCurrentChallenge();
                 } else {
-                    renderCertificate();
+                    currentLevelIdx++;
+                    if (currentLevelIdx < appData.length) {
+                        renderLevelSuccessScreen();
+                    } else {
+                        verifyGraduation();
+                    }
                 }
             }
         }
 
-        function renderLevelTransition() {
-            sounds.fanfare();
-            contentDiv.innerHTML = `
-                <div class="text-center animate-fade-in">
-                    <div class="text-8xl mb-6">🏆</div>
-                    <h2 class="text-4xl font-black text-gray-800 dark:text-white mb-4">أتممت المرحلة بنجاح!</h2>
-                    <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 font-medium">أنت تتقدم بخطوات واثقة في رحلة الحكمة.</p>
-                    <button onclick="renderLevel(${currentLevelIndex})" class="px-8 py-4 bg-gradient-to-r from-primary-500 to-green-600 text-white font-bold text-xl rounded-2xl shadow-lg hover:shadow-glow transition-all transform hover:-translate-y-1">
+        /* --- GAME 1: Chat-Bubble Dialogue Simulator --- */
+        function buildChatHTML(challenge) {
+            chatMeterValue = 50;
+            const shuffled = shuffleList(challenge.options);
+            
+            return `
+                <div id="chat-app" class="bg-white dark:bg-dark-card rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700">
+                    <!-- Chat Header -->
+                    <div class="bg-slate-100 dark:bg-slate-800/80 p-4 border-b border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 flex items-center justify-center font-bold text-xl">👤</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm">القريب المخالف</h4>
+                                    <span class="text-xs text-emerald-500 font-semibold flex items-center gap-1">● متصل الآن</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 bg-white dark:bg-slate-700 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 shadow-sm">${challenge.badge}</span>
+                        </div>
+                        
+                        <!-- Wisdom Meter -->
+                        <div class="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <div class="flex justify-between text-xs font-bold mb-1">
+                                <span class="text-rose-500">استفزاز وتنافر</span>
+                                <span class="text-primary-600 dark:text-primary-400">مقياس الحكمة والقبول</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                                <div id="chat-meter" class="h-full bg-amber-400 rounded-full transition-all duration-500" style="width: 50%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Body / Messages Area -->
+                    <div id="chat-messages-box" class="p-4 space-y-3 min-h-[220px] max-h-[300px] overflow-y-auto bg-slate-50 dark:bg-slate-900/40 text-sm">
+                        <!-- Initial Message -->
+                        <div class="chat-bubble-anim bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 p-3.5 rounded-2xl rounded-tr-none shadow-sm max-w-[85%] self-start border border-slate-200 dark:border-slate-700 text-right leading-relaxed">
+                            ${challenge.incomingMessage}
+                        </div>
+                    </div>
+
+                    <!-- Choices Area -->
+                    <div id="chat-options-box" class="p-3 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex flex-col gap-2">
+                        <span class="text-xs font-bold text-slate-400 px-1">اختر ردك الحكيم:</span>
+                        ${shuffled.map((opt) => {
+                            const serialized = encodeURIComponent(JSON.stringify(opt));
+                            return `
+                                <button onclick="chooseChatOption('${serialized}', this)" class="w-full text-right p-3 bg-slate-50 hover:bg-primary-50 dark:bg-slate-900/50 dark:hover:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-semibold transition">
+                                    ${opt.text}
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <div id="chat-outcome-box" class="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 hidden"></div>
+                </div>
+            `;
+        }
+        function chooseChatOption(dataStr, btnEl) {
+            Sound.tap();
+            const option = JSON.parse(decodeURIComponent(dataStr));
+            const challenge = appData[currentLevelIdx].challenges[currentChallengeIdx];
+            
+            // Disable option buttons
+            const optionsBox = document.getElementById('chat-options-box');
+            optionsBox.style.opacity = '0.5';
+            optionsBox.style.pointerEvents = 'none';
+
+            const msgsBox = document.getElementById('chat-messages-box');
+
+            // Append User reply
+            msgsBox.innerHTML += `
+                <div class="chat-bubble-anim bg-primary-600 text-white p-3.5 rounded-2xl rounded-tl-none shadow-sm max-w-[85%] mr-auto text-left leading-relaxed">
+                    ${option.text}
+                </div>
+            `;
+            msgsBox.scrollTop = msgsBox.scrollHeight;
+
+            // Update meter
+            chatMeterValue = Math.max(10, Math.min(95, chatMeterValue + option.meter));
+            const meterEl = document.getElementById('chat-meter');
+            meterEl.style.width = `${chatMeterValue}%`;
+            if (chatMeterValue >= 70) meterEl.className = "h-full bg-emerald-500 rounded-full transition-all duration-500";
+            else if (chatMeterValue <= 35) meterEl.className = "h-full bg-rose-500 rounded-full transition-all duration-500";
+            else meterEl.className = "h-full bg-amber-400 rounded-full transition-all duration-500";
+
+            // Simulated typing & reply
+            setTimeout(() => {
+                msgsBox.innerHTML += `
+                    <div id="typing-bubble" class="chat-bubble-anim bg-slate-200 dark:bg-slate-700 p-2.5 rounded-2xl rounded-tr-none w-14 flex justify-center gap-1">
+                        <span class="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce"></span>
+                        <span class="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style="animation-delay: 0.15s"></span>
+                        <span class="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style="animation-delay: 0.3s"></span>
+                    </div>
+                `;
+                msgsBox.scrollTop = msgsBox.scrollHeight;
+
+                setTimeout(() => {
+                    const typingEl = document.getElementById('typing-bubble');
+                    if (typingEl) typingEl.remove();
+
+                    msgsBox.innerHTML += `
+                        <div class="chat-bubble-anim bg-white dark:bg-slate-800 p-3.5 rounded-2xl rounded-tr-none shadow-sm max-w-[85%] self-start border-r-4 ${option.correct ? 'border-r-emerald-500 text-emerald-800 dark:text-emerald-300' : 'border-r-rose-500 text-rose-800 dark:text-rose-300'} text-right leading-relaxed font-bold">
+                            ${option.botReply}
+                        </div>
+                    `;
+                    msgsBox.scrollTop = msgsBox.scrollHeight;
+
+                    // Outcome handling
+                    const isSuccess = handleChallengeOutcome(option.correct, option.exp, challenge);
+                    optionsBox.classList.add('hidden');
+
+                    const outcomeBox = document.getElementById('chat-outcome-box');
+                    outcomeBox.classList.remove('hidden');
+                    outcomeBox.innerHTML = `
+                        <div class="p-4 rounded-xl text-sm leading-relaxed mb-3 ${isSuccess ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' : 'bg-rose-50 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800'}">
+                            <p class="font-black mb-1">${isSuccess ? '✅ رد موفق وحكيم!' : '❌ لم توفق في الرد.'}</p>
+                            <p class="font-medium">${option.exp}</p>
+                        </div>
+                        <button onclick="advanceChallenge()" class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-md transition">
+                            متابعة ➡️
+                        </button>
+                    `;
+                }, 1000);
+            }, 600);
+        }
+
+        /* --- GAME 2: Sort Actions (Touch / Click Friendly) --- */
+        function buildSortHTML(challenge) {
+            return `
+                <div id="sort-game" class="bg-white dark:bg-dark-card rounded-3xl p-5 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-700">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold px-3 py-1 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-full">${challenge.badge}</span>
+                        <span class="text-xs font-bold text-slate-400">تصنيف المواقف</span>
+                    </div>
+                    
+                    <h3 class="text-lg font-black text-slate-800 dark:text-white mb-2">${challenge.title}</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-6">${challenge.instruction}</p>
+
+                    <!-- Baskets -->
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <div id="basket-wisdom" class="bg-emerald-50/70 dark:bg-emerald-950/20 border-2 border-emerald-300 dark:border-emerald-800 rounded-2xl p-3 text-center min-h-[100px]">
+                            <span class="text-3xl">🕊️</span>
+                            <h4 class="font-black text-emerald-800 dark:text-emerald-400 text-sm">سلة الحكمة</h4>
+                            <div id="items-in-wisdom" class="mt-2 space-y-1.5"></div>
+                        </div>
+                        <div id="basket-haste" class="bg-rose-50/70 dark:bg-rose-950/20 border-2 border-rose-300 dark:border-rose-800 rounded-2xl p-3 text-center min-h-[100px]">
+                            <span class="text-3xl">🔥</span>
+                            <h4 class="font-black text-rose-800 dark:text-rose-400 text-sm">سلة التسرع</h4>
+                            <div id="items-in-haste" class="mt-2 space-y-1.5"></div>
+                        </div>
+                    </div>
+
+                    <!-- Items Pool -->
+                    <div id="sort-items-pool" class="space-y-2.5 mb-6"></div>
+
+                    <!-- Feedback -->
+                    <div id="sort-result-box" class="hidden"></div>
+                </div>
+            `;
+        }
+
+        function initSortState(challenge) {
+            activeSortItems = shuffleList(challenge.items);
+            sortedBaskets = { wisdom: [], haste: [] };
+            
+            const pool = document.getElementById('sort-items-pool');
+            pool.innerHTML = activeSortItems.map(item => `
+                <div id="sort-item-${item.id}" class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-xl flex flex-col sm:flex-row justify-between items-center gap-3 transition shadow-sm">
+                    <span class="font-bold text-xs sm:text-sm text-slate-800 dark:text-white text-center sm:text-right">${item.text}</span>
+                    <div class="flex gap-2 shrink-0">
+                        <button onclick="placeSortItem(${item.id}, 'wisdom')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition shadow-sm">
+                            حكمة 🕊️
+                        </button>
+                        <button onclick="placeSortItem(${item.id}, 'haste')" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold transition shadow-sm">
+                            تسرع 🔥
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function placeSortItem(itemId, choice) {
+            Sound.itemDrop();
+            const domItem = document.getElementById(`sort-item-${itemId}`);
+            const itemData = activeSortItems.find(i => i.id === itemId);
+            if (!domItem || !itemData) return;
+
+            itemData.chosen = choice;
+            sortedBaskets[choice].push(itemData);
+
+            // Move to basket
+            domItem.remove();
+            const targetContainer = document.getElementById(`items-in-${choice}`);
+            targetContainer.innerHTML += `
+                <div class="text-xs bg-white dark:bg-slate-800 p-2 rounded-lg shadow-sm font-semibold border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">
+                    ${itemData.text}
+                </div>
+            `;
+
+            // Check if all are sorted
+            if ((sortedBaskets.wisdom.length + sortedBaskets.haste.length) === activeSortItems.length) {
+                finalizeSortGame();
+            }
+        }
+
+        function finalizeSortGame() {
+            const challenge = appData[currentLevelIdx].challenges[currentChallengeIdx];
+            let allAccurate = true;
+
+            activeSortItems.forEach(item => {
+                if (item.target !== item.chosen) {
+                    allAccurate = false;
+                }
+            });
+
+            const isSuccess = handleChallengeOutcome(allAccurate, "التصنيف الصحيح يتطلب التمييز الدقيق بين الرفق والحكمة وبين التسرع والانفعال.", challenge);
+            const box = document.getElementById('sort-result-box');
+            box.classList.remove('hidden');
+            box.innerHTML = `
+                <div class="p-4 rounded-xl text-sm leading-relaxed mb-4 ${isSuccess ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-300' : 'bg-rose-50 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-300'}">
+                    <p class="font-black text-base mb-1">${isSuccess ? '✅ رائع! فرز منهجي متقن.' : '❌ لديك تصرفات وضعت في السلة الخطأ.'}</p>
+                    <p class="font-medium">${isSuccess ? 'أثبتّ وعياً عالياً بمسارات النصيحة الحكيمة ومزالق التسرع.' : 'تأمل القواعد جيداً وتذكر أن النصح في السر والرحمة يسبقان أي مواجهة.'}</p>
+                </div>
+                <button onclick="advanceChallenge()" class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-md transition">
+                    متابعة ➡️
+                </button>
+            `;
+        }
+        /* --- GAME 3: Deconstruct the Doubt Puzzle --- */
+        function buildPuzzleHTML(challenge) {
+            return `
+                <div id="puzzle-app" class="bg-white dark:bg-dark-card rounded-3xl p-5 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-700">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold px-3 py-1 bg-amber-50 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 rounded-full">${challenge.badge}</span>
+                        <span class="text-xs font-bold text-slate-400">تحديد أصل المغالطة</span>
+                    </div>
+
+                    <h3 class="text-lg font-black text-slate-800 dark:text-white mb-2">${challenge.title}</h3>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-6 leading-relaxed bg-amber-50/60 dark:bg-slate-800 p-3 rounded-xl border border-amber-100 dark:border-slate-700">
+                        ${challenge.instruction}
+                    </p>
+
+                    <!-- Interactive text area -->
+                    <div class="p-5 sm:p-6 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 text-base sm:text-lg leading-[2.5] text-justify font-medium select-none mb-6">
+                        ${challenge.parts.map((part) => {
+                            const strPart = encodeURIComponent(JSON.stringify(part));
+                            return `<span onclick="clickPuzzleSegment('${strPart}', this)" class="puzzle-segment">${part.text}</span>`;
+                        }).join('')}
+                    </div>
+
+                    <div id="puzzle-result-box" class="hidden"></div>
+                </div>
+            `;
+        }
+
+        function clickPuzzleSegment(partStr, spanEl) {
+            if (spanEl.classList.contains('active-correct') || spanEl.classList.contains('active-wrong')) return;
+            
+            const part = JSON.parse(decodeURIComponent(partStr));
+            const challenge = appData[currentLevelIdx].challenges[currentChallengeIdx];
+            const box = document.getElementById('puzzle-result-box');
+
+            if (part.isCore) {
+                spanEl.classList.add('active-correct');
+                const isSuccess = handleChallengeOutcome(true, part.exp, challenge);
+                
+                // Disable all segments
+                document.querySelectorAll('.puzzle-segment').forEach(s => s.style.pointerEvents = 'none');
+
+                box.classList.remove('hidden');
+                box.innerHTML = `
+                    <div class="p-4 rounded-xl text-sm leading-relaxed mb-4 bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-300">
+                        <p class="font-black text-base mb-1">✅ أحسنت! وضعت يدك على أصل الشبهة بدقة.</p>
+                        <p class="font-medium">${part.exp}</p>
+                    </div>
+                    <button onclick="advanceChallenge()" class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-md transition">
+                        متابعة ➡️
+                    </button>
+                `;
+            } else {
+                spanEl.classList.add('active-wrong');
+                Sound.error();
+                handleChallengeOutcome(false, "انشغلت بالحشو اللفظي العاطفي وتركت الأصل المنهجي للشبهة.", challenge);
+                
+                const container = document.getElementById('puzzle-app');
+                container.classList.add('animate-shake');
+                setTimeout(() => container.classList.remove('animate-shake'), 400);
+            }
+        }
+
+        /* --- GAME 4: Cooldown & Emotional Mastery Challenge --- */
+        function buildCooldownHTML(challenge) {
+            const shuffled = shuffleList(challenge.options);
+            return `
+                <div id="cooldown-app" class="bg-white dark:bg-dark-card rounded-3xl p-5 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-700 text-center">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold px-3 py-1 bg-rose-50 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 rounded-full">${challenge.badge}</span>
+                        <span class="text-xs font-bold text-slate-400">كبح الغضب</span>
+                    </div>
+
+                    <h3 class="text-lg font-black text-slate-800 dark:text-white mb-2">${challenge.title}</h3>
+                    
+                    <div class="bg-rose-50/70 dark:bg-rose-950/20 p-5 rounded-2xl mb-6 border border-rose-200 dark:border-rose-900/40 text-right">
+                        <p class="font-bold text-sm sm:text-base text-slate-800 dark:text-slate-100 leading-relaxed">${challenge.scenario}</p>
+                    </div>
+
+                    <!-- Cooldown Action Trigger -->
+                    <div id="cd-timer-section" class="mb-4">
+                        <button id="cd-trigger-btn" onclick="triggerCooldownTimer(${challenge.cooldownSeconds})" class="w-full py-5 bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-700 dark:to-slate-800 hover:from-black text-white font-black text-lg sm:text-xl rounded-2xl shadow-xl transition relative overflow-hidden active:scale-95">
+                            <span class="relative z-10 flex items-center justify-center gap-2">
+                                <span>تنفّس وعُدّ للخمسة (الصمت والحلم)</span>
+                                <span>⏳</span>
+                            </span>
+                            <div id="cd-progress-overlay" class="absolute inset-0 bg-primary-600/30 w-0 cooldown-fill-bar"></div>
+                        </button>
+                        <p class="text-xs text-slate-400 mt-2">اضغط على الزر لكظم الغيظ وتهدئة نبضاتك قبل اتخاذ القرار</p>
+                    </div>
+
+                    <!-- Hidden Options till cooled down -->
+                    <div id="cd-options-section" class="hidden space-y-2.5 text-right animate-fade-in">
+                        <span class="text-xs font-bold text-slate-400 block mb-1">الآن وأنت هادئ، اختر تصرفك:</span>
+                        ${shuffled.map((opt) => {
+                            const strOpt = encodeURIComponent(JSON.stringify(opt));
+                            return `
+                                <button onclick="selectCooldownAnswer('${strOpt}', this)" class="w-full p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary-500 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 transition shadow-sm">
+                                    ${opt.text}
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <div id="cd-result-box" class="hidden mt-4 text-right"></div>
+                </div>
+            `;
+        }
+
+        function triggerCooldownTimer(seconds) {
+            Sound.tap();
+            const btn = document.getElementById('cd-trigger-btn');
+            const overlay = document.getElementById('cd-progress-overlay');
+            if (!btn || !overlay) return;
+
+            btn.style.pointerEvents = 'none';
+            btn.querySelector('span').innerHTML = `<span>جاري كظم الغيظ والاستغفار...</span> <span>🕊️</span>`;
+            overlay.style.transition = `width ${seconds}s linear`;
+            overlay.style.width = '100%';
+
+            setTimeout(() => {
+                Sound.success();
+                document.getElementById('cd-timer-section').classList.add('hidden');
+                const optSection = document.getElementById('cd-options-section');
+                optSection.classList.remove('hidden');
+            }, seconds * 1000);
+        }
+
+        function selectCooldownAnswer(strOpt, btnEl) {
+            const opt = JSON.parse(decodeURIComponent(strOpt));
+            const challenge = appData[currentLevelIdx].challenges[currentChallengeIdx];
+            
+            document.querySelectorAll('#cd-options-section button').forEach(b => {
+                b.style.pointerEvents = 'none';
+                b.classList.add('opacity-50');
+            });
+            btnEl.classList.remove('opacity-50');
+
+            const isSuccess = handleChallengeOutcome(opt.correct, opt.exp, challenge);
+            const box = document.getElementById('cd-result-box');
+            
+            box.classList.remove('hidden');
+            box.innerHTML = `
+                <div class="p-4 rounded-xl text-sm leading-relaxed mb-4 ${isSuccess ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-300' : 'bg-rose-50 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-300'}">
+                    <p class="font-black text-base mb-1">${isSuccess ? '✅ تصرف حكيم ورزين!' : '❌ تصرف متسرع.'}</p>
+                    <p class="font-medium">${opt.exp}</p>
+                </div>
+                <button onclick="advanceChallenge()" class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-md transition">
+                    متابعة ➡️
+                </button>
+            `;
+        }
+        /* ==========================================================================
+           7. LEVEL TRANSITIONS & FINAL GRADUATION CERTIFICATE
+           ========================================================================== */
+        function renderLevelSuccessScreen() {
+            Sound.victory();
+            triggerConfetti();
+            const main = document.getElementById('app-content');
+            main.innerHTML = `
+                <div class="max-w-md w-full text-center animate-fade-in bg-white dark:bg-dark-card p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700">
+                    <div class="text-7xl mb-4">🏆</div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white mb-2">
+                        أتممت المرحلة بنجاح!
+                    </h2>
+                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 mb-6">
+                        تتقدم بخطى راسخة نحو التمكن من مهارات الحوار والدعوة بالحكمة.
+                    </p>
+                    <button onclick="renderLevelCardsScreen()" class="w-full py-3.5 bg-gradient-to-r from-primary-600 to-emerald-600 text-white font-black text-base sm:text-lg rounded-xl shadow-lg transition transform active:scale-95">
                         الانتقال للمرحلة التالية ➡️
                     </button>
                 </div>
             `;
         }
 
-        function renderCertificate() {
-            sounds.fanfare();
-            updateProgress(100);
-            fireConfetti();
-            setInterval(fireConfetti, 3000); // Keep firing at the end
+        function verifyGraduation() {
+            if (stumbles.length > 0) {
+                // Must clear stumbles first!
+                const main = document.getElementById('app-content');
+                main.innerHTML = `
+                    <div class="max-w-xl w-full text-center bg-white dark:bg-dark-card p-8 rounded-3xl shadow-2xl border-4 border-amber-400 animate-fade-in">
+                        <div class="text-7xl mb-4">🛑</div>
+                        <h2 class="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white mb-3">
+                            خطوة واحدة تفصلك عن الشهادة!
+                        </h2>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base mb-6 leading-relaxed">
+                            أنهيت المراحل الأربع، ولكن الحكمة تقتضي ألا يتجاوز الداعية عثراته دون إتقان. 
+                            لديك <span class="font-black text-rose-600 bg-rose-100 dark:bg-rose-950 px-2 py-0.5 rounded">${stumbles.length} تعثرات</span> مسجلة في صندوق المراجعة، يلزم تصفيتها أولاً لنيل الشهادة.
+                        </p>
+                        <button onclick="openReviewMode()" class="px-8 py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-black text-base sm:text-lg rounded-xl shadow-lg transition transform active:scale-95 animate-bounce">
+                            فتح صندوق التعثرات لتصحيحها ⚠️
+                        </button>
+                    </div>
+                `;
+            } else {
+                renderFinalCertificate();
+            }
+        }
 
-            contentDiv.innerHTML = `
+        function renderFinalCertificate() {
+            Sound.victory();
+            setProgressBar(100);
+            triggerConfetti();
+
+            const main = document.getElementById('app-content');
+            main.innerHTML = `
                 <div class="w-full max-w-4xl animate-fade-in flex flex-col items-center">
-                    <h2 class="text-3xl font-black mb-6 text-gray-800 dark:text-white">مبارك! لقد أتممت الرحلة بنجاح 🎉</h2>
                     
-                    <div class="w-full mb-8 bg-white dark:bg-dark-card p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row gap-4 items-center justify-center print:hidden">
-                        <label class="font-bold text-lg whitespace-nowrap">اكتب اسمك الثلاثي للشهادة:</label>
-                        <input type="text" id="cert-name-input" placeholder="الاسم هنا..." onkeyup="updateCertName()" class="w-full max-w-sm px-4 py-3 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-transparent focus:border-primary-500 focus:outline-none text-lg font-bold">
-                        <button id="print-btn" onclick="window.print()" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-md hover:bg-blue-700 transition-colors flex items-center gap-2 whitespace-nowrap">
-                            🖨️ طباعة / حفظ PDF
+                    <!-- Controls Bar -->
+                    <div id="print-controls-bar" class="w-full mb-6 bg-white dark:bg-dark-card p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row gap-3 items-center justify-between">
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <label class="font-bold text-xs sm:text-sm text-slate-700 dark:text-slate-200 whitespace-nowrap">اسمك للشهادة:</label>
+                            <input type="text" id="cert-user-name" placeholder="اكتب اسمك الثلاثي..." oninput="updateCertDisplay(this.value)" class="w-full sm:w-64 px-3 py-2 text-sm rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 font-bold focus:outline-none focus:border-primary-500">
+                        </div>
+                        <button onclick="window.print()" class="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm">
+                            <span>🖨️ طباعة أو حفظ كـ PDF</span>
                         </button>
                     </div>
 
-                    <!-- Certificate Design -->
-                    <div id="certificate-container" class="w-full bg-white text-gray-900 p-8 md:p-16 rounded-none sm:rounded-3xl shadow-2xl relative overflow-hidden border-[16px] border-double border-primary-600 aspect-[1.414/1] flex flex-col justify-center items-center text-center">
-                        <!-- Corner Decorations -->
-                        <div class="absolute top-4 left-4 text-4xl opacity-20">🌿</div>
-                        <div class="absolute top-4 right-4 text-4xl opacity-20">🌿</div>
-                        <div class="absolute bottom-4 left-4 text-4xl opacity-20">🌿</div>
-                        <div class="absolute bottom-4 right-4 text-4xl opacity-20">🌿</div>
-                        
-                        <div class="text-6xl mb-6">🧭</div>
-                        <h1 class="text-4xl md:text-5xl font-black text-primary-700 mb-2 font-serif" style="font-family: 'Tajawal', serif;">شهادة إنجاز</h1>
-                        <div class="w-32 h-1 bg-primary-500 mb-10 mx-auto"></div>
-                        
-                        <p class="text-xl md:text-2xl font-medium mb-6 text-gray-700 leading-loose">
-                            يشهد موقع <span class="font-bold text-primary-700">رحلة الحكمة والدعوة</span> بأن المحاور الحكيم:
-                        </p>
-                        
-                        <h2 id="cert-name-display" class="text-4xl md:text-5xl font-black text-gray-900 mb-6 pb-2 border-b-2 border-gray-400 min-w-[300px] inline-block">
-                            [اسم المتدرب]
-                        </h2>
-                        
-                        <p class="text-xl md:text-2xl font-medium mb-12 text-gray-700 leading-relaxed max-w-2xl">
-                            قد أتم بنجاح وتفوق جميع مراحل القواعد المنهجية والتطبيقات العملية والمحاكاة في مهارات الحوار والدعوة بالحكمة والموعظة الحسنة.
-                        </p>
-                        
-                        <div class="flex justify-between w-full max-w-2xl mt-8 pt-8 border-t border-gray-300">
+                    <!-- Authentic Certificate Layout -->
+                    <div id="certificate-container" class="w-full bg-white text-slate-900 p-8 sm:p-14 rounded-3xl shadow-2xl border-[12px] border-double border-primary-700 relative overflow-hidden flex flex-col justify-between items-center text-center aspect-[1.414/1]">
+                        <!-- Decorative Corners -->
+                        <span class="absolute top-4 right-4 text-3xl opacity-25">🌿</span>
+                        <span class="absolute top-4 left-4 text-3xl opacity-25">🌿</span>
+                        <span class="absolute bottom-4 right-4 text-3xl opacity-25">🌿</span>
+                        <span class="absolute bottom-4 left-4 text-3xl opacity-25">🌿</span>
+
+                        <div class="w-full">
+                            <div class="text-5xl mb-2">🧭</div>
+                            <h1 class="text-3xl sm:text-4xl font-black text-primary-800 font-serif tracking-wider mb-1">
+                                شهادة إنجاز واجتياز
+                            </h1>
+                            <div class="w-28 h-1 bg-primary-600 mx-auto mb-6 rounded-full"></div>
+
+                            <p class="text-base sm:text-xl font-medium text-slate-700 leading-relaxed mb-4">
+                                يشهد موقع <span class="font-bold text-primary-800">رحلة الحكمة والدعوة</span> بأن المحاور الحكيم:
+                            </p>
+
+                            <h2 id="cert-name-label" class="text-2xl sm:text-4xl font-black text-slate-900 py-1 px-6 border-b-2 border-slate-300 inline-block min-w-[260px] my-2">
+                                [اسم المتدرب]
+                            </h2>
+
+                            <p class="text-sm sm:text-base font-medium text-slate-600 max-w-2xl mx-auto leading-relaxed mt-4">
+                                قد أتم بنجاح وتفوق كافة المراحل المنهجية ومعامل المحاكاة التفاعلية، وتمكّن من مهارات الحوار والرد بالحكمة والرفق دون انتصار للنفس ولا استعلاء على الخلق.
+                            </p>
+                        </div>
+
+                        <!-- Signatures & Date Footer -->
+                        <div class="w-full flex justify-between items-end pt-8 border-t border-slate-200 mt-6 text-xs sm:text-sm">
                             <div class="text-center">
-                                <p class="font-bold text-lg">تاريخ الإصدار</p>
-                                <p class="text-gray-600">${new Date().toLocaleDateString('ar-EG')}</p>
+                                <p class="text-slate-500 font-bold mb-1">تاريخ الإصدار</p>
+                                <p class="font-bold text-slate-800">${new Date().toLocaleDateString('ar-EG')}</p>
                             </div>
-                            <div class="text-center">
-                                <div class="w-24 h-24 border-4 border-primary-600 rounded-full flex items-center justify-center transform -rotate-12 opacity-80">
-                                    <span class="font-black text-primary-700 text-sm">مُعتمَد<br>رحلة الحكمة</span>
-                                </div>
+
+                            <div class="w-20 h-20 sm:w-24 sm:h-24 border-2 border-primary-700 rounded-full flex items-center justify-center p-1 -rotate-12 shadow-sm opacity-90">
+                                <span class="text-[10px] sm:text-xs font-black text-primary-800 text-center leading-tight">مُعتمد ومُتقن<br>✓</span>
                             </div>
+
                             <div class="text-center">
-                                <p class="font-bold text-lg">إدارة المنصة</p>
-                                <p class="text-gray-600 font-signature" style="font-family: cursive;">المحاور الحكيم</p>
+                                <p class="text-slate-500 font-bold mb-1">إدارة المنصة</p>
+                                <p class="font-bold text-slate-800 font-serif">منصة رحلة الحكمة</p>
                             </div>
                         </div>
                     </div>
@@ -769,17 +1277,18 @@
             `;
         }
 
-        window.updateCertName = function() {
-            const input = document.getElementById('cert-name-input').value;
-            const display = document.getElementById('cert-name-display');
-            display.innerText = input.trim() === '' ? '[اسم المتدرب]' : input;
+        function updateCertDisplay(val) {
+            const display = document.getElementById('cert-name-label');
+            if (display) {
+                display.innerText = val.trim() === '' ? '[اسم المتدرب]' : val.trim();
+            }
         }
-
-        window.onload = () => {
-            document.body.classList.add('text-base'); // Default font size
+        /* ==========================================================================
+           8. APPLICATION BOOTSTRAP
+           ========================================================================== */
+        window.addEventListener('DOMContentLoaded', () => {
             renderWelcome();
-        };
-
+        });
     </script>
 </body>
 </html>
